@@ -1,26 +1,66 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import ToDoLists from "./ToDoLists";
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
 
-function App() {
+const App = () => {
+  const [inputList, setInputList] = useState("");
+  const [items, setItems] = useState([]);
+
+  const itemEvent = (e) => {
+    setInputList(e.target.value);
+  };
+
+  const deleteItem = (id) => {
+    setItems((oldItems) =>{
+      return oldItems.filter((arrElem , index)=>{
+        return index !== id;
+      })
+    })
+  };
+
+  const itemList = () => {
+    setItems((oldItems) => {
+      return [...oldItems, inputList];
+    });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="main-div">
+        <div className="center-div">
+          <h1>toDo List</h1>
+
+          <div className="static-content">
+            <input
+              type="text"
+              placeholder="Add to Doo.."
+              onChange={itemEvent}
+            />
+            <Button className="plus" onClick={itemList}>
+              <AddIcon />
+            </Button>
+          </div>
+
+          <div className="dynamic-content">
+            <ol>
+              {items.map((itemVal, index) => {
+                return (
+                  <ToDoLists
+                    key={index}
+                    id={index}
+                    onSelect={deleteItem}
+                    toDoItem={itemVal}
+                  />
+                );
+              })}
+            </ol>
+          </div>
+        </div>
+      </div>
+    </>
   );
-}
+};
 
 export default App;
